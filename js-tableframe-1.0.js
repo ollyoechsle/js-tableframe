@@ -14,15 +14,15 @@ window.OO = window.OO || {};
     Table.prototype.jContainer = null;
 
     Table.prototype.draw = function () {
-        var jTable = jQuery("<table></table>"),
-            jThead = jQuery("<thead></thead>").appendTo(jTable),
+        var jTable = jQuery(Mustache.to_html(Table.TABLE)),
+            jTr = jTable.find("thead tr"),
             columns = this.model.getColumns();
 
-        columns
-            .map(Mustache.to_html.bind(this, Table.TH))
-            .forEach(function (th) {
-                         jThead.append(th)
-                     });
+        jTr.html(
+            columns
+                .map(Mustache.to_html.bind(this, Table.TH))
+                .join("")
+        );
 
         this.jContainer
             .empty()
@@ -30,6 +30,7 @@ window.OO = window.OO || {};
     };
 
     Table.TH = '<th data-id="{{{id}}}">{{{name}}}</th>';
+    Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
 
     OO.Table = Table;
 

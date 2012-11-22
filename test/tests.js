@@ -41,9 +41,12 @@
         table.draw();
 
         thenThe(jQuery(".tableContainer table")).should(beThere);
-        thenThe(jQuery(".tableContainer table th"))
+        thenThe(jQuery(".tableContainer table tr th"))
             .should(haveSize(4))
             .should(haveText("Identifier", "Name", "123", "Red"));
+
+        thenThe(jQuery(".tableContainer table tbody")).should(beThere);
+        thenThe(jQuery(".tableContainer table tbody tr")).should(haveSize(0));
 
     })
 
