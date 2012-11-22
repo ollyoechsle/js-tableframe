@@ -35,9 +35,7 @@
     }
 
     function valueObject(item) {
-        return {
-            value:item
-        }
+        return {value:item}
     }
 
     Table.TH = '<th data-id="{{{id}}}">{{{name}}}</th>';
