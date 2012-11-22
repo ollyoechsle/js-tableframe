@@ -25,7 +25,7 @@
             .append(jTable);
     };
 
-    Table.TH = '<th data-id="{{{id}}}"></th>';
+    Table.TH = '<th data-id="{{{id}}}">{{{name}}}</th>';
 
     OO.Table = Table;
 

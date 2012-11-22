@@ -14,16 +14,24 @@
             {
                 columns:[
                     {
-                        id:"id"
+                        id:"id",
+                        name:"Identifier"
                     },
                     {
-                        id:"name"
+                        id:"name",
+                        name:function () {
+                            return "Name";
+                        }
                     },
                     {
-                        id:"age"
+                        id:"age",
+                        name: 123
                     },
                     {
-                        id:"colour"
+                        id:"colour",
+                        name: function() {
+                            return "Red";
+                        }
                     }
                 ]}
         );
@@ -33,7 +41,9 @@
         table.draw();
 
         thenThe(jQuery(".tableContainer table")).should(beThere);
-        thenThe(jQuery(".tableContainer table th")).should(haveSize(4));
+        thenThe(jQuery(".tableContainer table th"))
+            .should(haveSize(4))
+            .should(haveText("Identifier", "Name", "123", "Red"));
 
     })
 
