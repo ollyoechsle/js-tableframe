@@ -25,14 +25,14 @@
                     },
                     {
                         id:"age",
-                        name: 123
-                    },
-                    {
-                        id:"colour",
-                        name: function() {
-                            return "Red";
-                        }
+                        name:"Age"
                     }
+                ],
+                data:[
+                    [1, "Michael Jackson", 50],
+                    [2, "Albert Einstein", 76],
+                    [3, "Abraham Lincoln", 56],
+                    [4, "William Shakespeare", 52]
                 ]}
         );
 
@@ -42,11 +42,16 @@
 
         thenThe(jQuery(".tableContainer table")).should(beThere);
         thenThe(jQuery(".tableContainer table tr th"))
-            .should(haveSize(4))
-            .should(haveText("Identifier", "Name", "123", "Red"));
+            .should(haveText("Identifier", "Name", "Age"));
+
+        console.log(jQuery("table").html());
 
         thenThe(jQuery(".tableContainer table tbody")).should(beThere);
-        thenThe(jQuery(".tableContainer table tbody tr")).should(haveSize(0));
+        thenThe(jQuery(".tableContainer table tbody tr").eq(0).find("td"))
+            .should(haveText("1", "Michael Jackson", "50"));
+
+        thenThe(jQuery(".tableContainer table tbody tr").eq(1).find("td"))
+            .should(haveText("2", "Albert Einstein", "76"));
 
     })
 
