@@ -33,8 +33,8 @@
     test("Paging", function () {
         var model = new OO.TableModel(
             jQuery.extend(famousPeople(), {
-                pageSize: 2,
-                pageNumber: 0
+                pageSize:2,
+                pageNumber:0
             })
         );
 
@@ -50,6 +50,26 @@
 
         thenThe(jQuery(".tableContainer table tbody tr")).should(haveSize(2));
         thenThe(jQuery(".tableContainer table tbody td:first-child")).should(haveText(3, 4));
+
+    });
+
+    test("Formatting", function () {
+
+        var data = fruits();
+        data.columns[1].formatter = function (colour) {
+            return "<span class='icon' data-colour='" + colour + "'></span>"
+        };
+
+        var model = new OO.TableModel(
+            data
+        );
+
+        var table = new OO.Table(".tableContainer", model);
+        table.draw();
+
+        thenThe(jQuery(".tableContainer tbody tr"))
+            .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
 
     });
 
@@ -76,6 +96,27 @@
                 [2, "Albert Einstein", 76],
                 [3, "Abraham Lincoln", 56],
                 [4, "William Shakespeare", 52]
+            ]
+        }
+    }
+
+    function fruits() {
+        return {
+            columns:[
+                {
+                    id:"id",
+                    name:"Fruit"
+                },
+                {
+                    id:"colour",
+                    name:"Colour"
+                }
+            ],
+            data:[
+                ["Apple", "green"],
+                ["Banana", "yellow"],
+                ["Orange", "orange"],
+                ["Red Grape", "purple"]
             ]
         }
     }

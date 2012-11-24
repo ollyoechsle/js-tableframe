@@ -19,12 +19,29 @@
     };
 
     TableModel.prototype.getVisibleRows = function () {
-        return this.allData.filter(this.inPage.bind(this));
+        return this.allData
+            .filter(this.inPage.bind(this))
+            .map(this.formatRow.bind(this));
+    };
+
+    TableModel.prototype.formatRow = function(row, index, array) {
+
+        this.columns.forEach(function(column, index) {
+            var formatter = column.formatter || TableModel.NO_FORMAT;
+            row[index] = formatter(row[index]);
+        });
+
+        return row;
+
     };
 
     TableModel.prototype.inPage = function (value, index, array) {
         var min = this.pageNumber * this.pageSize;
         return index >= min && index < min + this.pageSize;
+    };
+
+    TableModel.NO_FORMAT = function(val) {
+        return val;
     };
 
     OO.TableModel = TableModel;

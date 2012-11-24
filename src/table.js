@@ -40,7 +40,7 @@
 
     Table.TH = '<th data-column="{{{id}}}">{{{name}}}</th>';
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
-    Table.ROW = '<tr>{{#list}}<td>{{value}}</td>{{/list}}</tr>';
+    Table.ROW = '<tr>{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
     OO.Table = Table;
 
