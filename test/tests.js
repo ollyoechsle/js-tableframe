@@ -55,13 +55,13 @@
 
     test("Formatting", function () {
 
-        var data = fruits();
-        data.columns[1].formatter = function (colour) {
-            return "<span class='icon' data-colour='" + colour + "'></span>"
-        };
-
         var model = new OO.TableModel(
-            data
+            fruits()
+        ).setFormatter(
+            "colour",
+            function (colour) {
+                return "<span class='icon' data-colour='" + colour + "'></span>"
+            }
         );
 
         var table = new OO.Table(".tableContainer", model);
@@ -69,7 +69,8 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
-            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
+                    inElement(".icon"));
 
     });
 

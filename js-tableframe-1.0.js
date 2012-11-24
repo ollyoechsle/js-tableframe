@@ -65,6 +65,18 @@ window.OO = window.OO || {};
     TableModel.prototype.pageSize = null;
     TableModel.prototype.pageNumber = null;
 
+    TableModel.prototype.setFormatter = function (columnId, formatterFn) {
+        var column = this.getColumn(columnId);
+        column && (column.formatter = formatterFn);
+        return this;
+    };
+
+    TableModel.prototype.getColumn = function (columnId) {
+        return this.columns.filter(function (column) {
+            return column.id == columnId;
+        })[0];
+    };
+
     TableModel.prototype.getColumns = function () {
         return this.columns;
     };
@@ -75,9 +87,9 @@ window.OO = window.OO || {};
             .map(this.formatRow.bind(this));
     };
 
-    TableModel.prototype.formatRow = function(row, index, array) {
+    TableModel.prototype.formatRow = function (row, index, array) {
 
-        this.columns.forEach(function(column, index) {
+        this.columns.forEach(function (column, index) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
             row[index] = formatter(row[index]);
         });
@@ -91,7 +103,7 @@ window.OO = window.OO || {};
         return index >= min && index < min + this.pageSize;
     };
 
-    TableModel.NO_FORMAT = function(val) {
+    TableModel.NO_FORMAT = function (val) {
         return val;
     };
 
