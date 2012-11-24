@@ -42,7 +42,7 @@ window.OO = window.OO || {};
         return {value:item}
     }
 
-    Table.TH = '<th data-id="{{{id}}}">{{{name}}}</th>';
+    Table.TH = '<th data-column="{{{id}}}">{{{name}}}</th>';
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
     Table.ROW = '<tr>{{#list}}<td>{{value}}</td>{{/list}}</tr>';
 

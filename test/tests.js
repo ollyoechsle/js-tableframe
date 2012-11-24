@@ -18,7 +18,8 @@
 
         thenThe(jQuery(".tableContainer table")).should(beThere);
         thenThe(jQuery(".tableContainer table tr th"))
-            .should(haveText("Identifier", "Name", "Age"));
+            .should(haveText("Identifier", "Name", "Age"))
+            .should(haveAttribute("data-column", "id", "name", "age"));
 
         thenThe(jQuery(".tableContainer table tbody")).should(beThere);
         thenThe(jQuery(".tableContainer table tbody tr").eq(0).find("td"))
