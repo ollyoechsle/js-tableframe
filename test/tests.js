@@ -30,6 +30,24 @@
 
     });
 
+    test("Switch Data", function () {
+        var model = new OO.TableModel(famousPeople());
+        var table = new OO.Table(".tableContainer", model);
+
+        table.draw();
+
+        thenThe(jQuery(".tableContainer table"))
+            .should(beThere)
+            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+
+        when(model.setAllData(fruits()));
+
+        thenThe(jQuery(".tableContainer table"))
+            .should(beThere)
+            .should(haveText("Fruit", "Colour"), inElement("tr th"));
+
+    });
+
     test("Paging", function () {
         var model = new OO.TableModel(
             jQuery.extend(famousPeople(), {
@@ -69,7 +87,8 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
-            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
+                    inElement(".icon"));
 
     });
 

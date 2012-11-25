@@ -1,10 +1,7 @@
 (function () {
 
     function TableModel(options) {
-        this.columns = options.columns || [];
-        this.allData = options.data || [];
-        this.pageSize = options.pageSize || 10;
-        this.pageNumber = options.pageNumber || 0;
+        this.setAllData(options || {});
     }
 
     TableModel.prototype = Object.create(Subscribable.prototype);
@@ -13,6 +10,14 @@
     TableModel.prototype.allData = null;
     TableModel.prototype.pageSize = null;
     TableModel.prototype.pageNumber = null;
+
+    TableModel.prototype.setAllData = function (options) {
+        this.columns = options.columns || [];
+        this.allData = options.data || [];
+        this.pageSize = options.pageSize || 10;
+        this.pageNumber = options.pageNumber || 0;
+        this.fire("allDataChanged");
+    };
 
     TableModel.prototype.setFormatter = function (columnId, formatterFn) {
         var column = this.getColumn(columnId);

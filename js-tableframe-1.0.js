@@ -7,11 +7,16 @@ window.OO = window.OO || {};
     function Table(container, model) {
         this.jContainer = jQuery(container);
         this.model = model;
+        this.initialise();
     }
 
     Table.prototype = Object.create(Subscribable.prototype);
 
     Table.prototype.jContainer = null;
+
+    Table.prototype.initialise = function() {
+        this.model.on("allDataChanged", this.draw.bind(this));
+    };
 
     Table.prototype.draw = function () {
         var jTable = jQuery(Mustache.to_html(Table.TABLE));
@@ -52,10 +57,7 @@ window.OO = window.OO || {};
 (function () {
 
     function TableModel(options) {
-        this.columns = options.columns || [];
-        this.allData = options.data || [];
-        this.pageSize = options.pageSize || 10;
-        this.pageNumber = options.pageNumber || 0;
+        this.setAllData(options || {});
     }
 
     TableModel.prototype = Object.create(Subscribable.prototype);
@@ -64,6 +66,14 @@ window.OO = window.OO || {};
     TableModel.prototype.allData = null;
     TableModel.prototype.pageSize = null;
     TableModel.prototype.pageNumber = null;
+
+    TableModel.prototype.setAllData = function (options) {
+        this.columns = options.columns || [];
+        this.allData = options.data || [];
+        this.pageSize = options.pageSize || 10;
+        this.pageNumber = options.pageNumber || 0;
+        this.fire("allDataChanged");
+    };
 
     TableModel.prototype.setFormatter = function (columnId, formatterFn) {
         var column = this.getColumn(columnId);

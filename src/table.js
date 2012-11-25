@@ -3,11 +3,16 @@
     function Table(container, model) {
         this.jContainer = jQuery(container);
         this.model = model;
+        this.initialise();
     }
 
     Table.prototype = Object.create(Subscribable.prototype);
 
     Table.prototype.jContainer = null;
+
+    Table.prototype.initialise = function() {
+        this.model.on("allDataChanged", this.draw.bind(this));
+    };
 
     Table.prototype.draw = function () {
         var jTable = jQuery(Mustache.to_html(Table.TABLE));
