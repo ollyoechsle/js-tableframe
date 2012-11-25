@@ -69,8 +69,19 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
-            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
-                    inElement(".icon"));
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
+
+    });
+
+    test("Get Column", function () {
+
+        var model = new OO.TableModel(
+            fruits()
+        );
+
+        ok(model.getColumn("id"));
+        ok(model.getColumn("colour"));
+        ok(!model.getColumn("foo"))
 
     });
 
