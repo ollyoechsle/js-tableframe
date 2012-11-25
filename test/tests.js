@@ -6,35 +6,34 @@
         },
         teardown:function () {
             jQuery(".tableContainer").remove();
+            model = null;
+            table = null;
         }
     });
 
     test("Create Table", function () {
-        var model = new js.TableModel(famousPeople());
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
 
-        var table = new js.Table(".tableContainer", model);
+        when(model.setAllData(famousPeople()));
 
-        table.draw();
+        thenThe(jQuery(".tableContainer table thead"))
+            .should(beThere)
+            .should(haveText("Identifier", "Name", "Age"), inElement("th"))
+            .should(haveAttribute("data-column", "id", "name", "age"), inElement("th"));
 
-        thenThe(jQuery(".tableContainer table")).should(beThere);
-        thenThe(jQuery(".tableContainer table tr th"))
-            .should(haveText("Identifier", "Name", "Age"))
-            .should(haveAttribute("data-column", "id", "name", "age"));
-
-        thenThe(jQuery(".tableContainer table tbody")).should(beThere);
-        thenThe(jQuery(".tableContainer table tbody tr").eq(0).find("td"))
-            .should(haveText("1", "Michael Jackson", "50"));
-
-        thenThe(jQuery(".tableContainer table tbody tr").eq(1).find("td"))
-            .should(haveText("2", "Albert Einstein", "76"));
+        thenThe(jQuery(".tableContainer table tbody"))
+            .should(beThere)
+            .should(haveText("1", "Michael Jackson", "50"), inElement("tr:nth-child(1) td"))
+            .should(haveText("2", "Albert Einstein", "76"), inElement("tr:nth-child(2) td"))
+            .should(haveText("3", "Abraham Lincoln", "56"), inElement("tr:nth-child(3) td"))
+            .should(haveText("4", "William Shakespeare", "52"), inElement("tr:nth-child(4) td"));
 
     });
 
     test("Switch Data", function () {
-        var model = new js.TableModel(famousPeople());
-        var table = new js.Table(".tableContainer", model);
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
 
-        table.draw();
+        when(model.setAllData(famousPeople()));
 
         thenThe(jQuery(".tableContainer table"))
             .should(beThere)
@@ -49,10 +48,9 @@
     });
 
     test("Destroy", function () {
-        var model = new js.TableModel(famousPeople());
-        var table = new js.Table(".tableContainer", model);
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
 
-        table.draw();
+        when(model.setAllData(famousPeople()));
 
         thenThe(jQuery(".tableContainer table"))
             .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
@@ -66,46 +64,44 @@
     });
 
     test("Paging", function () {
-        var model = new js.TableModel(
-            jQuery.extend(famousPeople(), {
-                pageSize:2,
-                pageNumber:0
-            })
-        );
 
-        var table = new js.Table(".tableContainer", model);
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
 
-        table.draw();
+        when(model.setAllData(jQuery.extend(famousPeople(), {
+            pageSize:2,
+            pageNumber:0
+        })));
 
-        thenThe(jQuery(".tableContainer table tbody tr")).should(haveSize(2));
-        thenThe(jQuery(".tableContainer table tbody td:first-child")).should(haveText(1, 2));
+        thenThe(jQuery(".tableContainer table tbody"))
+            .should(haveSize(2), inElement("tr"))
+            .should(haveText(1, 2), inElement("td:first-child"));
 
-        model.pageNumber = 1;
-        table.draw();
+        when(model.setPage(1));
 
-        thenThe(jQuery(".tableContainer table tbody tr")).should(haveSize(2));
-        thenThe(jQuery(".tableContainer table tbody td:first-child")).should(haveText(3, 4));
+        thenThe(jQuery(".tableContainer table tbody"))
+            .should(haveSize(2), inElement("tr"))
+            .should(haveText(3, 4), inElement("td:first-child"));
 
     });
 
     test("Formatting", function () {
 
-        var model = new js.TableModel(
-            fruits()
-        ).setFormatter(
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+
+        when(model.setAllData(fruits()));
+
+        when(model.setFormatter(
             "colour",
             function (colour) {
                 return "<span class='icon' data-colour='" + colour + "'></span>"
             }
-        );
+        ));
 
-        var table = new js.Table(".tableContainer", model);
-        table.draw();
+        when(table.draw());
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
-            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
-                    inElement(".icon"));
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
 
     });
 
@@ -120,6 +116,10 @@
         ok(!model.getColumn("foo"))
 
     });
+
+    /* End of Tests */
+
+    var model, table;
 
     function famousPeople() {
         return {

@@ -80,6 +80,11 @@ window.js = window.js || {};
         this.fire("allDataChanged");
     };
 
+    TableModel.prototype.setPage = function (num) {
+        this.pageNumber = num || 0;
+        this.fire("allDataChanged");
+    };
+
     TableModel.prototype.setFormatter = function (columnId, formatterFn) {
         var column = this.getColumn(columnId);
         column && (column.formatter = formatterFn);
