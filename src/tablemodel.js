@@ -46,14 +46,16 @@
             .map(this.formatRow.bind(this));
     };
 
-    TableModel.prototype.formatRow = function (row, index, array) {
+    TableModel.prototype.formatRow = function (row) {
 
-        this.columns.forEach(function (column, index) {
+        var formatted = [];
+
+        this.columns.forEach(function (column) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
-            row[index] = formatter(row[index], row);
+            formatted.push(formatter(row[column.id], row));
         });
 
-        return row;
+        return formatted;
 
     };
 

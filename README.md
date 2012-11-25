@@ -27,15 +27,15 @@ jQuery(function () {
                     id:"age",
                     name:"Age",
                     formatter:function (age, person) {
-                        return person[3] - person[2];
+                        return person.died - person.born;
                     }
                 }
             ],
             data:[
-                [1, "Michael Jackson", 1958, 2009],
-                [2, "Albert Einstein", 1879, 1955],
-                [3, "Abraham Lincoln", 1809, 1865],
-                [4, "William Shakespeare", 1564, 1616]
+                {"id": "1", "name": "Michael Jackson", "born": 1958, "died": 2009},
+                {"id": "2", "name": "Albert Einstein", "born": 1879, "died": 1955},
+                {"id": "3", "name": "Abraham Lincoln", "born": 1809, "died": 1865},
+                {"id": "4", "name": "William Shakespeare", "born": 1564, "died": 1616}
             ]
         });
 

@@ -19,14 +19,19 @@
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
             .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"));
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"),
+                    inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
-            .should(haveText("1", "Michael Jackson", 1958, 2009, 51), inElement("tr:nth-child(1) td"))
-            .should(haveText("2", "Albert Einstein", 1879, 1955, 76), inElement("tr:nth-child(2) td"))
-            .should(haveText("3", "Abraham Lincoln", 1809, 1865, 56), inElement("tr:nth-child(3) td"))
-            .should(haveText("4", "William Shakespeare", 1564, 1616, 52), inElement("tr:nth-child(4) td"));
+            .should(haveText("1", "Michael Jackson", 1958, 2009, 51),
+                    inElement("tr:nth-child(1) td"))
+            .should(haveText("2", "Albert Einstein", 1879, 1955, 76),
+                    inElement("tr:nth-child(2) td"))
+            .should(haveText("3", "Abraham Lincoln", 1809, 1865, 56),
+                    inElement("tr:nth-child(3) td"))
+            .should(haveText("4", "William Shakespeare", 1564, 1616, 52),
+                    inElement("tr:nth-child(4) td"));
 
     });
 
@@ -147,15 +152,15 @@
                     id:"age",
                     name:"Age",
                     formatter:function (age, person) {
-                        return person[3] - person[2];
+                        return person.died - person.born;
                     }
                 }
             ],
             data:[
-                [1, "Michael Jackson", 1958, 2009],
-                [2, "Albert Einstein", 1879, 1955],
-                [3, "Abraham Lincoln", 1809, 1865],
-                [4, "William Shakespeare", 1564, 1616]
+                {"id":"1", "name":"Michael Jackson", "born":1958, "died":2009},
+                {"id":"2", "name":"Albert Einstein", "born":1879, "died":1955},
+                {"id":"3", "name":"Abraham Lincoln", "born":1809, "died":1865},
+                {"id":"4", "name":"William Shakespeare", "born":1564, "died":1616}
             ]
         }
     }
@@ -173,10 +178,10 @@
                 }
             ],
             data:[
-                ["Apple", "green"],
-                ["Banana", "yellow"],
-                ["Orange", "orange"],
-                ["Red Grape", "purple"]
+                {"id": "Apple", colour: "green"},
+                {"id": "Banana", colour: "yellow"},
+                {"id": "Orange", colour: "orange"},
+                {"id": "Red Grape", colour: "purple"}
             ]
         }
     }

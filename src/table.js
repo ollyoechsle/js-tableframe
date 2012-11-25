@@ -37,7 +37,7 @@
 
     Table.prototype.destroy = function() {
         this.model.un(null, this);
-    }
+    };
 
     function renderDataRow(row) {
         return Mustache.to_html(Table.ROW, {list:row.map(valueObject)});

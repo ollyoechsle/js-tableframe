@@ -42,7 +42,7 @@ window.js = window.js || {};
 
     Table.prototype.destroy = function() {
         this.model.un(null, this);
-    }
+    };
 
     function renderDataRow(row) {
         return Mustache.to_html(Table.ROW, {list:row.map(valueObject)});
@@ -107,14 +107,16 @@ window.js = window.js || {};
             .map(this.formatRow.bind(this));
     };
 
-    TableModel.prototype.formatRow = function (row, index, array) {
+    TableModel.prototype.formatRow = function (row) {
 
-        this.columns.forEach(function (column, index) {
+        var formatted = [];
+
+        this.columns.forEach(function (column) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
-            row[index] = formatter(row[index], row);
+            formatted.push(formatter(row[column.id], row));
         });
 
-        return row;
+        return formatted;
 
     };
 
