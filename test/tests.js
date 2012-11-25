@@ -48,6 +48,23 @@
 
     });
 
+    test("Destroy", function () {
+        var model = new OO.TableModel(famousPeople());
+        var table = new OO.Table(".tableContainer", model);
+
+        table.draw();
+
+        thenThe(jQuery(".tableContainer table"))
+            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+
+        when(table.destroy());
+        when(model.setAllData(fruits()));
+
+        thenThe(jQuery(".tableContainer table"))
+            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+
+    });
+
     test("Paging", function () {
         var model = new OO.TableModel(
             jQuery.extend(famousPeople(), {

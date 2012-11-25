@@ -11,7 +11,7 @@
     Table.prototype.jContainer = null;
 
     Table.prototype.initialise = function() {
-        this.model.on("allDataChanged", this.draw.bind(this));
+        this.model.on("allDataChanged", this.draw, this);
     };
 
     Table.prototype.draw = function () {
@@ -34,6 +34,10 @@
             .append(jTable);
 
     };
+
+    Table.prototype.destroy = function() {
+        this.model.un(null, this);
+    }
 
     function renderDataRow(row) {
         return Mustache.to_html(Table.ROW, {list:row.map(valueObject)});
