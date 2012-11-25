@@ -17,14 +17,17 @@ jQuery(function () {
                 },
                 {
                     id:"age",
-                    name:"Age"
+                    name:"Age",
+                    formatter:function (age, person) {
+                        return person[3] - person[2];
+                    }
                 }
             ],
             data:[
-                [1, "Michael Jackson", 50],
-                [2, "Albert Einstein", 76],
-                [3, "Abraham Lincoln", 56],
-                [4, "William Shakespeare", 52]
+                [1, "Michael Jackson", 1958, 2009],
+                [2, "Albert Einstein", 1879, 1955],
+                [3, "Abraham Lincoln", 1809, 1865],
+                [4, "William Shakespeare", 1564, 1616]
             ]
         });
 
