@@ -43,10 +43,10 @@
     TableModel.prototype.getVisibleRows = function () {
         return this.allData
             .filter(this.inPage.bind(this))
-            .map(this.formatRow.bind(this));
+            .map(this.transformRow.bind(this));
     };
 
-    TableModel.prototype.formatRow = function (row) {
+    TableModel.prototype.transformRow = function (row) {
 
         var formatted = [];
 
@@ -54,6 +54,8 @@
             var formatter = column.formatter || TableModel.NO_FORMAT;
             formatted.push(formatter(row[column.id], row));
         });
+
+        formatted.id = row.id;
 
         return formatted;
 

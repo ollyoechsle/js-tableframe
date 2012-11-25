@@ -42,6 +42,12 @@ jQuery(function () {
 });
 ```
 
+Events
+------
+
+The table will fire the following events:
+* rowClicked - the callback will be provided with the id of the row (ensure each row object has an 'id' property)
+
 Dependencies
 ------------
 

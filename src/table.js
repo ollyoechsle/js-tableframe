@@ -10,8 +10,9 @@
 
     Table.prototype.jContainer = null;
 
-    Table.prototype.initialise = function() {
+    Table.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
+        this.jContainer.delegate("tbody tr", "click.table", this.handleRowClick.bind(this));
     };
 
     Table.prototype.draw = function () {
@@ -35,12 +36,22 @@
 
     };
 
-    Table.prototype.destroy = function() {
+    Table.prototype.handleRowClick = function (jEvent) {
+        var jRow = jQuery(jEvent.currentTarget),
+            id = jRow.data("id");
+        this.fire("rowClicked", id);
+    };
+
+    Table.prototype.destroy = function () {
         this.model.un(null, this);
+        this.jContainer.undelegate(".table");
     };
 
     function renderDataRow(row) {
-        return Mustache.to_html(Table.ROW, {list:row.map(valueObject)});
+        return Mustache.to_html(Table.ROW, {
+                                    id:row.id,
+                                    list:row.map(valueObject)}
+        );
     }
 
     function valueObject(item) {
@@ -49,7 +60,7 @@
 
     Table.TH = '<th data-column="{{{id}}}">{{{name}}}</th>';
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
-    Table.ROW = '<tr>{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
+    Table.ROW = '<tr data-id="{{id}}">{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
     js.Table = Table;
 

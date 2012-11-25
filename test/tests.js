@@ -89,6 +89,30 @@
 
     });
 
+    test("Row Clicks", function () {
+
+        given(
+            model = new js.TableModel(),
+            table = new js.Table(".tableContainer", model),
+            table.on("rowClicked", clickHandler)
+        );
+
+        when(model.setAllData(fruits()));
+
+        when(theUserClicksOn(".tableContainer tbody tr:nth-child(1)"));
+
+        thenThe(clickHandler)
+            .shouldHaveBeen(calledOnce)
+            .shouldHaveBeen(calledWith("Apple"));
+
+        when(theUserClicksOn(".tableContainer tbody tr:nth-child(2)"));
+
+        thenThe(clickHandler)
+            .shouldHaveBeen(calledAgain)
+            .shouldHaveBeen(calledWith("Banana"));
+
+    });
+
     test("Formatting", function () {
 
         given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
@@ -125,7 +149,7 @@
 
     /* End of Tests */
 
-    var model, table;
+    var model, table, clickHandler = sinon.stub();
 
     function famousPeople() {
         return {
@@ -178,10 +202,10 @@
                 }
             ],
             data:[
-                {"id": "Apple", colour: "green"},
-                {"id": "Banana", colour: "yellow"},
-                {"id": "Orange", colour: "orange"},
-                {"id": "Red Grape", colour: "purple"}
+                {"id":"Apple", colour:"green"},
+                {"id":"Banana", colour:"yellow"},
+                {"id":"Orange", colour:"orange"},
+                {"id":"Red Grape", colour:"purple"}
             ]
         }
     }

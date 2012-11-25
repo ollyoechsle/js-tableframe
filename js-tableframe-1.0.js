@@ -15,8 +15,9 @@ window.js = window.js || {};
 
     Table.prototype.jContainer = null;
 
-    Table.prototype.initialise = function() {
+    Table.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
+        this.jContainer.delegate("tbody tr", "click.table", this.handleRowClick.bind(this));
     };
 
     Table.prototype.draw = function () {
@@ -40,12 +41,22 @@ window.js = window.js || {};
 
     };
 
-    Table.prototype.destroy = function() {
+    Table.prototype.handleRowClick = function (jEvent) {
+        var jRow = jQuery(jEvent.currentTarget),
+            id = jRow.data("id");
+        this.fire("rowClicked", id);
+    };
+
+    Table.prototype.destroy = function () {
         this.model.un(null, this);
+        this.jContainer.undelegate(".table");
     };
 
     function renderDataRow(row) {
-        return Mustache.to_html(Table.ROW, {list:row.map(valueObject)});
+        return Mustache.to_html(Table.ROW, {
+                                    id:row.id,
+                                    list:row.map(valueObject)}
+        );
     }
 
     function valueObject(item) {
@@ -54,7 +65,7 @@ window.js = window.js || {};
 
     Table.TH = '<th data-column="{{{id}}}">{{{name}}}</th>';
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
-    Table.ROW = '<tr>{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
+    Table.ROW = '<tr data-id="{{id}}">{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
     js.Table = Table;
 
@@ -104,10 +115,10 @@ window.js = window.js || {};
     TableModel.prototype.getVisibleRows = function () {
         return this.allData
             .filter(this.inPage.bind(this))
-            .map(this.formatRow.bind(this));
+            .map(this.transformRow.bind(this));
     };
 
-    TableModel.prototype.formatRow = function (row) {
+    TableModel.prototype.transformRow = function (row) {
 
         var formatted = [];
 
@@ -115,6 +126,8 @@ window.js = window.js || {};
             var formatter = column.formatter || TableModel.NO_FORMAT;
             formatted.push(formatter(row[column.id], row));
         });
+
+        formatted.id = row.id;
 
         return formatted;
 
