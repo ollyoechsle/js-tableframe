@@ -18,15 +18,15 @@
 
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
-            .should(haveText("Identifier", "Name", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "age"), inElement("th"));
+            .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
-            .should(haveText("1", "Michael Jackson", "50"), inElement("tr:nth-child(1) td"))
-            .should(haveText("2", "Albert Einstein", "76"), inElement("tr:nth-child(2) td"))
-            .should(haveText("3", "Abraham Lincoln", "56"), inElement("tr:nth-child(3) td"))
-            .should(haveText("4", "William Shakespeare", "52"), inElement("tr:nth-child(4) td"));
+            .should(haveText("1", "Michael Jackson", 1958, 2009, 51), inElement("tr:nth-child(1) td"))
+            .should(haveText("2", "Albert Einstein", 1879, 1955, 76), inElement("tr:nth-child(2) td"))
+            .should(haveText("3", "Abraham Lincoln", 1809, 1865, 56), inElement("tr:nth-child(3) td"))
+            .should(haveText("4", "William Shakespeare", 1564, 1616, 52), inElement("tr:nth-child(4) td"));
 
     });
 
@@ -37,7 +37,7 @@
 
         thenThe(jQuery(".tableContainer table"))
             .should(beThere)
-            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+            .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("tr th"));
 
         when(model.setAllData(fruits()));
 
@@ -53,13 +53,13 @@
         when(model.setAllData(famousPeople()));
 
         thenThe(jQuery(".tableContainer table"))
-            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+            .should(haveText("Identifier", "Name"), inElement("tr th"));
 
         when(table.destroy());
         when(model.setAllData(fruits()));
 
         thenThe(jQuery(".tableContainer table"))
-            .should(haveText("Identifier", "Name", "Age"), inElement("tr th"));
+            .should(haveText("Identifier", "Name"), inElement("tr th"));
 
     });
 
@@ -101,7 +101,8 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
-            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"), inElement(".icon"));
+            .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
+                    inElement(".icon"));
 
     });
 
@@ -135,15 +136,26 @@
                     }
                 },
                 {
+                    id:"born",
+                    name:"Born"
+                },
+                {
+                    id:"died",
+                    name:"Died"
+                },
+                {
                     id:"age",
-                    name:"Age"
+                    name:"Age",
+                    formatter:function (age, person) {
+                        return person[3] - person[2];
+                    }
                 }
             ],
             data:[
-                [1, "Michael Jackson", 50],
-                [2, "Albert Einstein", 76],
-                [3, "Abraham Lincoln", 56],
-                [4, "William Shakespeare", 52]
+                [1, "Michael Jackson", 1958, 2009],
+                [2, "Albert Einstein", 1879, 1955],
+                [3, "Abraham Lincoln", 1809, 1865],
+                [4, "William Shakespeare", 1564, 1616]
             ]
         }
     }

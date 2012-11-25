@@ -50,7 +50,7 @@
 
         this.columns.forEach(function (column, index) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
-            row[index] = formatter(row[index]);
+            row[index] = formatter(row[index], row);
         });
 
         return row;
