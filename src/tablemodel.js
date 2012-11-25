@@ -61,6 +61,6 @@
         return val;
     };
 
-    OO.TableModel = TableModel;
+    js.TableModel = TableModel;
 
 })();

@@ -10,9 +10,9 @@
     });
 
     test("Create Table", function () {
-        var model = new OO.TableModel(famousPeople());
+        var model = new js.TableModel(famousPeople());
 
-        var table = new OO.Table(".tableContainer", model);
+        var table = new js.Table(".tableContainer", model);
 
         table.draw();
 
@@ -31,8 +31,8 @@
     });
 
     test("Switch Data", function () {
-        var model = new OO.TableModel(famousPeople());
-        var table = new OO.Table(".tableContainer", model);
+        var model = new js.TableModel(famousPeople());
+        var table = new js.Table(".tableContainer", model);
 
         table.draw();
 
@@ -49,8 +49,8 @@
     });
 
     test("Destroy", function () {
-        var model = new OO.TableModel(famousPeople());
-        var table = new OO.Table(".tableContainer", model);
+        var model = new js.TableModel(famousPeople());
+        var table = new js.Table(".tableContainer", model);
 
         table.draw();
 
@@ -66,14 +66,14 @@
     });
 
     test("Paging", function () {
-        var model = new OO.TableModel(
+        var model = new js.TableModel(
             jQuery.extend(famousPeople(), {
                 pageSize:2,
                 pageNumber:0
             })
         );
 
-        var table = new OO.Table(".tableContainer", model);
+        var table = new js.Table(".tableContainer", model);
 
         table.draw();
 
@@ -90,7 +90,7 @@
 
     test("Formatting", function () {
 
-        var model = new OO.TableModel(
+        var model = new js.TableModel(
             fruits()
         ).setFormatter(
             "colour",
@@ -99,7 +99,7 @@
             }
         );
 
-        var table = new OO.Table(".tableContainer", model);
+        var table = new js.Table(".tableContainer", model);
         table.draw();
 
         thenThe(jQuery(".tableContainer tbody tr"))
@@ -111,7 +111,7 @@
 
     test("Get Column", function () {
 
-        var model = new OO.TableModel(
+        var model = new js.TableModel(
             fruits()
         );
 

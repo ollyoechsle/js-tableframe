@@ -1,2 +1,2 @@
 /**@namespace*/
-window.OO = window.OO || {};
+window.js = window.js || {};

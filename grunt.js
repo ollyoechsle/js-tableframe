@@ -28,6 +28,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', 'concat min');
+    grunt.registerTask('run', 'default server watch');
     grunt.registerTask('test', 'default server qunit');
 
 };

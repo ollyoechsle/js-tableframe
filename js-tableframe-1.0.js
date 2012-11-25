@@ -1,7 +1,8 @@
 /* JS Table Frame 1.0 */
 
 /**@namespace*/
-window.OO = window.OO || {};
+window.js = window.js || {};
+
 (function () {
 
     function Table(container, model) {
@@ -55,7 +56,7 @@ window.OO = window.OO || {};
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
     Table.ROW = '<tr>{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
-    OO.Table = Table;
+    js.Table = Table;
 
 })();
 (function () {
@@ -121,6 +122,6 @@ window.OO = window.OO || {};
         return val;
     };
 
-    OO.TableModel = TableModel;
+    js.TableModel = TableModel;
 
 })();
