@@ -54,6 +54,7 @@ window.js = window.js || {};
 
     function renderDataRow(row) {
         return Mustache.to_html(Table.ROW, {
+                                    className:row.className,
                                     id:row.id,
                                     list:row.map(valueObject)}
         );
@@ -63,9 +64,9 @@ window.js = window.js || {};
         return {value:item}
     }
 
-    Table.TH = '<th data-column="{{{id}}}">{{{name}}}</th>';
+    Table.TH = '<th class="{{className}}" data-column="{{{id}}}">{{{name}}}</th>';
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
-    Table.ROW = '<tr data-id="{{id}}">{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
+    Table.ROW = '<tr class="{{className}}" data-id="{{id}}">{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
     js.Table = Table;
 
@@ -123,8 +124,10 @@ window.js = window.js || {};
         var formatted = [];
 
         this.columns.forEach(function (column) {
-            var formatter = column.formatter || TableModel.NO_FORMAT;
-            formatted.push(formatter(row[column.id], row));
+            var formatter = column.formatter || TableModel.NO_FORMAT,
+                value = formatter(row[column.id], row);
+            value.className = column.className;
+            formatted.push(value);
         });
 
         formatted.id = row.id;

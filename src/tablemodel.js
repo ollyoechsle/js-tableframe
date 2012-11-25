@@ -51,8 +51,10 @@
         var formatted = [];
 
         this.columns.forEach(function (column) {
-            var formatter = column.formatter || TableModel.NO_FORMAT;
-            formatted.push(formatter(row[column.id], row));
+            var formatter = column.formatter || TableModel.NO_FORMAT,
+                value = formatter(row[column.id], row);
+            value.className = column.className;
+            formatted.push(value);
         });
 
         formatted.id = row.id;

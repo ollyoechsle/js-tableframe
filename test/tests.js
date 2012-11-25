@@ -19,8 +19,8 @@
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
             .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"),
-                    inElement("th"));
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"))
+            .should(haveClass("number", "string", "number", "number", "number"), inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
@@ -156,25 +156,30 @@
             columns:[
                 {
                     id:"id",
-                    name:"Identifier"
+                    name:"Identifier",
+                    className:"number"
                 },
                 {
                     id:"name",
                     name:function () {
                         return "Name";
-                    }
+                    },
+                    className:"string"
                 },
                 {
                     id:"born",
-                    name:"Born"
+                    name:"Born",
+                    className:"number"
                 },
                 {
                     id:"died",
-                    name:"Died"
+                    name:"Died",
+                    className:"number"
                 },
                 {
                     id:"age",
                     name:"Age",
+                    className:"number",
                     formatter:function (age, person) {
                         return person.died - person.born;
                     }
