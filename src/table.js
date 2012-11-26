@@ -3,12 +3,19 @@
     function Table(container, model) {
         this.jContainer = jQuery(container);
         this.model = model;
+        this.cellRenderers = [Table.ADD_COLUMN_CLASS];
         this.initialise();
     }
 
     Table.prototype = Object.create(Subscribable.prototype);
 
     Table.prototype.jContainer = null;
+    Table.prototype.cellRenderers = null;
+
+    Table.prototype.withCellRenderer = function (rendererFn) {
+        this.cellRenderers.push(rendererFn);
+        return this;
+    };
 
     Table.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
@@ -32,7 +39,8 @@
                     .html(column.name)
                     .appendTo(jHeaderRow),
                 column,
-                i
+                i,
+                this.model
             )
         }
 
@@ -71,6 +79,7 @@
                     .appendTo(jRow),
                 columns[i],
                 i,
+                this.model,
                 row
             );
 
@@ -80,7 +89,13 @@
 
     };
 
-    Table.prototype.renderCell = function (jCell, column, index, row) {
+    Table.prototype.renderCell = function (jCell, column, index, model, row) {
+        this.cellRenderers.forEach(function (fn) {
+            fn(jCell, column, index, model, row);
+        })
+    };
+
+    Table.ADD_COLUMN_CLASS = function (jCell, column, index, model, row) {
         jCell.addClass(column.className);
     };
 
