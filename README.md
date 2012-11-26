@@ -53,5 +53,4 @@ Dependencies
 
 * ECMAScript5 (use es5shim if not on a modern browser)
 * jQuery
-* Mustache
 * Subscribable (https://github.com/steveukx/Subscribable)

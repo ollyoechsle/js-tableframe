@@ -19,8 +19,7 @@
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
             .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"))
-            .should(haveClass("number", "string", "number", "number", "number"), inElement("th"));
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
@@ -32,6 +31,20 @@
                     inElement("tr:nth-child(3) td"))
             .should(haveText("4", "William Shakespeare", 1564, 1616, 52),
                     inElement("tr:nth-child(4) td"));
+
+    });
+
+    test("Cell Classes", function () {
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+
+        when(model.setAllData(famousPeople()));
+
+        thenThe(jQuery(".tableContainer table thead"))
+            .should(haveClass("number", "string", "number", "number", "number"), inElement("th"));
+
+        thenThe(jQuery(".tableContainer table tbody"))
+            .should(haveClass("number", "string", "number", "number", "number"), inElement("tr:nth-child(1) td"))
+            .should(haveClass("number", "string", "number", "number", "number"), inElement("tr:nth-child(2) td"));
 
     });
 

@@ -16,19 +16,29 @@
     };
 
     Table.prototype.draw = function () {
-        var jTable = jQuery(Mustache.to_html(Table.TABLE));
+        var jTable = jQuery(Table.TABLE),
+            rows = this.model.getVisibleRows(),
+            columns = this.model.getColumns(),
+            jHeaderRow = jTable.find("thead tr"),
+            jTbody = jTable.find("tbody"),
+            column,
+            i, l;
 
-        jTable.find("thead tr").html(
-            this.model.getColumns()
-                .map(Mustache.to_html.bind(this, Table.TH))
-                .join("")
-        );
+        for (i = 0, l = columns.length; i < l; i++) {
+            column = columns[i];
+            this.renderCell(
+                jQuery("<th></th>")
+                    .attr("data-column", column.id)
+                    .html(column.name)
+                    .appendTo(jHeaderRow),
+                column,
+                i
+            )
+        }
 
-        jTable.find("tbody").html(
-            this.model.getVisibleRows()
-                .map(renderDataRow)
-                .join("")
-        );
+        for (i = 0, l = rows.length; i < l; i++) {
+            jTbody.append(this.renderDataRow(rows[i], columns))
+        }
 
         this.jContainer
             .empty()
@@ -47,21 +57,34 @@
         this.jContainer.undelegate(".table");
     };
 
-    function renderDataRow(row) {
-        return Mustache.to_html(Table.ROW, {
-                                    className:row.className,
-                                    id:row.id,
-                                    list:row.map(valueObject)}
-        );
-    }
+    Table.prototype.renderDataRow = function (row, columns) {
 
-    function valueObject(item) {
-        return {value:item}
-    }
+        var jRow = jQuery("<tr></tr>").attr("data-id", row.id),
+            rowLength = row.length,
+            i;
 
-    Table.TH = '<th class="{{className}}" data-column="{{{id}}}">{{{name}}}</th>';
+        for (i = 0; i < rowLength; i++) {
+
+            this.renderCell(
+                jQuery("<td></td>")
+                    .html(row[i])
+                    .appendTo(jRow),
+                columns[i],
+                i,
+                row
+            );
+
+        }
+
+        return jRow;
+
+    };
+
+    Table.prototype.renderCell = function (jCell, column, index, row) {
+        jCell.addClass(column.className);
+    };
+
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
-    Table.ROW = '<tr class="{{className}}" data-id="{{id}}">{{#list}}<td>{{{value}}}</td>{{/list}}</tr>';
 
     js.Table = Table;
 
