@@ -47,6 +47,7 @@ window.js = window.js || {};
 
             if (column.sort) {
                 jTh.attr("data-sort", column.sort.direction);
+                jTh.attr("data-max", column.sort.max);
             }
 
             this.renderCell(
@@ -187,8 +188,18 @@ window.js = window.js || {};
         this.columns.forEach(function (column, index) {
             if (column.id == this.sortField) {
                 mappedData = mappedData.sort(this.sortDirection.sorter(index));
+
+                var max = 0;
+                mappedData.forEach(function getValue(data) {
+                    var a = data[index];
+                    if (!isNaN(a) && a > max) {
+                        max = a;
+                    }
+                });
+
                 column.sort = {
-                    direction: this.sortDirection.id
+                    direction:this.sortDirection.id,
+                    max:max
                 }
             } else {
                 column.sort = null;
@@ -222,7 +233,7 @@ window.js = window.js || {};
     };
 
     TableModel.ASCENDING = {
-        id: "ascending",
+        id:"ascending",
         sorter:function (fieldId) {
             return function (a, b) {
                 return compare(a, b, fieldId);
@@ -234,7 +245,7 @@ window.js = window.js || {};
     };
 
     TableModel.DESCENDING = {
-        id: "descending",
+        id:"descending",
         sorter:function (index) {
             return function (a, b) {
                 return -1 * compare(a, b, index);

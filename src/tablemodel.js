@@ -61,8 +61,18 @@
         this.columns.forEach(function (column, index) {
             if (column.id == this.sortField) {
                 mappedData = mappedData.sort(this.sortDirection.sorter(index));
+
+                var max = 0;
+                mappedData.forEach(function getValue(data) {
+                    var a = data[index];
+                    if (!isNaN(a) && a > max) {
+                        max = a;
+                    }
+                });
+
                 column.sort = {
-                    direction: this.sortDirection.id
+                    direction:this.sortDirection.id,
+                    max:max
                 }
             } else {
                 column.sort = null;
@@ -77,7 +87,7 @@
 
         var formatted = this.columns.map(function (column) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
-            return formatter(row[column.id], row);
+            return formatter(row[column.id], row, column);
         });
 
         formatted.id = row.id;
@@ -96,7 +106,7 @@
     };
 
     TableModel.ASCENDING = {
-        id: "ascending",
+        id:"ascending",
         sorter:function (fieldId) {
             return function (a, b) {
                 return compare(a, b, fieldId);
@@ -108,7 +118,7 @@
     };
 
     TableModel.DESCENDING = {
-        id: "descending",
+        id:"descending",
         sorter:function (index) {
             return function (a, b) {
                 return -1 * compare(a, b, index);

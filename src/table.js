@@ -42,6 +42,7 @@
 
             if (column.sort) {
                 jTh.attr("data-sort", column.sort.direction);
+                jTh.attr("data-max", column.sort.max);
             }
 
             this.renderCell(

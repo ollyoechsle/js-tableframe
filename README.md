@@ -47,7 +47,7 @@ Column  Formatters
 
 You can pass a formatter function into each column to format the column.
 
-formatter is invoked with two arguments: the value of the element, and the complete row of data
+formatter is invoked with three arguments: the value of the element, the complete row of data, and the column instance
 
 Events
 ------
