@@ -19,7 +19,8 @@
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
             .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"));
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"),
+                    inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
@@ -43,8 +44,10 @@
             .should(haveClass("number", "string", "number", "number", "number"), inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
-            .should(haveClass("number", "string", "number", "number", "number"), inElement("tr:nth-child(1) td"))
-            .should(haveClass("number", "string", "number", "number", "number"), inElement("tr:nth-child(2) td"));
+            .should(haveClass("number", "string", "number", "number", "number"),
+                    inElement("tr:nth-child(1) td"))
+            .should(haveClass("number", "string", "number", "number", "number"),
+                    inElement("tr:nth-child(2) td"));
 
     });
 
@@ -145,6 +148,27 @@
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
             .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
                     inElement(".icon"));
+
+    });
+
+    test("Sorting", function () {
+
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+
+        when(model.setAllData(famousPeople()));
+
+        thenThe(jQuery(".tableContainer tbody tr"))
+            .should(haveText("Michael Jackson", "Albert Einstein", "Abraham Lincoln",
+                             "William Shakespeare"), inElement("td:nth-child(2)"));
+
+        when(theUserClicksOn(".tableContainer thead [data-column='name']"));
+
+        thenThe(jQuery(".tableContainer tbody tr"))
+            .should(haveText("Abraham Lincoln", "Albert Einstein", "Michael Jackson",
+                             "William Shakespeare"), inElement("td:nth-child(2)"));
+
+        thenThe(jQuery(".tableContainer thead [data-column='name']"))
+            .should(haveAttribute("data-sort", "ascending"))
 
     });
 

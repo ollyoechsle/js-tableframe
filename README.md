@@ -42,11 +42,19 @@ jQuery(function () {
 });
 ```
 
+Column  Formatters
+----------
+
+You can pass a formatter function into each column to format the column.
+
+formatter is invoked with two arguments: the value of the element, and the complete row of data
+
 Events
 ------
 
 The table will fire the following events:
 * rowClicked - the callback will be provided with the id of the row (ensure each row object has an 'id' property)
+* columnClicked - the callback will be provided with the id of the column (ensure each column object has an 'id' property)
 
 Dependencies
 ------------

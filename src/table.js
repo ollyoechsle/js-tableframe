@@ -20,6 +20,7 @@
     Table.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
         this.jContainer.delegate("tbody tr", "click.table", this.handleRowClick.bind(this));
+        this.jContainer.delegate("thead th", "click.table", this.handleColumnClick.bind(this));
     };
 
     Table.prototype.draw = function () {
@@ -28,16 +29,23 @@
             columns = this.model.getColumns(),
             jHeaderRow = jTable.find("thead tr"),
             jTbody = jTable.find("tbody"),
-            column,
+            column, jTh,
             i, l;
 
         for (i = 0, l = columns.length; i < l; i++) {
             column = columns[i];
+
+            jTh = jQuery("<th></th>")
+                .attr("data-column", column.id)
+                .html(column.name)
+                .appendTo(jHeaderRow);
+
+            if (column.sort) {
+                jTh.attr("data-sort", column.sort.direction);
+            }
+
             this.renderCell(
-                jQuery("<th></th>")
-                    .attr("data-column", column.id)
-                    .html(column.name)
-                    .appendTo(jHeaderRow),
+                jTh,
                 column,
                 i,
                 this.model
@@ -58,6 +66,13 @@
         var jRow = jQuery(jEvent.currentTarget),
             id = jRow.data("id");
         this.fire("rowClicked", id);
+    };
+
+    Table.prototype.handleColumnClick = function (jEvent) {
+        var jRow = jQuery(jEvent.currentTarget),
+            columnId = jRow.data("column");
+        this.model.setSorting(columnId);
+        this.fire("columnClicked", columnId);
     };
 
     Table.prototype.destroy = function () {

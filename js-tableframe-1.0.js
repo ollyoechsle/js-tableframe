@@ -25,6 +25,7 @@ window.js = window.js || {};
     Table.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
         this.jContainer.delegate("tbody tr", "click.table", this.handleRowClick.bind(this));
+        this.jContainer.delegate("thead th", "click.table", this.handleColumnClick.bind(this));
     };
 
     Table.prototype.draw = function () {
@@ -33,16 +34,23 @@ window.js = window.js || {};
             columns = this.model.getColumns(),
             jHeaderRow = jTable.find("thead tr"),
             jTbody = jTable.find("tbody"),
-            column,
+            column, jTh,
             i, l;
 
         for (i = 0, l = columns.length; i < l; i++) {
             column = columns[i];
+
+            jTh = jQuery("<th></th>")
+                .attr("data-column", column.id)
+                .html(column.name)
+                .appendTo(jHeaderRow);
+
+            if (column.sort) {
+                jTh.attr("data-sort", column.sort.direction);
+            }
+
             this.renderCell(
-                jQuery("<th></th>")
-                    .attr("data-column", column.id)
-                    .html(column.name)
-                    .appendTo(jHeaderRow),
+                jTh,
                 column,
                 i,
                 this.model
@@ -63,6 +71,13 @@ window.js = window.js || {};
         var jRow = jQuery(jEvent.currentTarget),
             id = jRow.data("id");
         this.fire("rowClicked", id);
+    };
+
+    Table.prototype.handleColumnClick = function (jEvent) {
+        var jRow = jQuery(jEvent.currentTarget),
+            columnId = jRow.data("column");
+        this.model.setSorting(columnId);
+        this.fire("columnClicked", columnId);
     };
 
     Table.prototype.destroy = function () {
@@ -112,6 +127,7 @@ window.js = window.js || {};
 (function () {
 
     function TableModel(options) {
+        this.sortDirection = TableModel.ASCENDING;
         this.setAllData(options || {});
     }
 
@@ -121,6 +137,8 @@ window.js = window.js || {};
     TableModel.prototype.allData = null;
     TableModel.prototype.pageSize = null;
     TableModel.prototype.pageNumber = null;
+    TableModel.prototype.sortField = null;
+    TableModel.prototype.sortDirection = null;
 
     TableModel.prototype.setAllData = function (options) {
         this.columns = options.columns || [];
@@ -135,6 +153,16 @@ window.js = window.js || {};
         this.fire("allDataChanged");
     };
 
+    TableModel.prototype.setSorting = function (field, direction) {
+        console.log("setSorting", arguments);
+        this.sortDirection =
+        direction || field == this.sortField ? this.sortDirection.opposite()
+            : TableModel.ASCENDING;
+        this.sortField = field;
+        this.fire("allDataChanged");
+        return this;
+    };
+
     TableModel.prototype.setFormatter = function (columnId, formatterFn) {
         var column = this.getColumn(columnId);
         column && (column.formatter = formatterFn);
@@ -142,7 +170,8 @@ window.js = window.js || {};
     };
 
     TableModel.prototype.getColumn = function (columnId) {
-        return this.columns.filter(function (column) {
+        return this.columns.filter(function (column, index, columns) {
+            column._index = index;
             return column.id == columnId;
         })[0];
     };
@@ -152,20 +181,29 @@ window.js = window.js || {};
     };
 
     TableModel.prototype.getVisibleRows = function () {
-        return this.allData
-            .filter(this.inPage.bind(this))
-            .map(this.transformRow.bind(this));
+
+        var mappedData = this.allData.map(this.transformRow.bind(this));
+
+        this.columns.forEach(function (column, index) {
+            if (column.id == this.sortField) {
+                mappedData = mappedData.sort(this.sortDirection.sorter(index));
+                column.sort = {
+                    direction: this.sortDirection.id
+                }
+            } else {
+                column.sort = null;
+            }
+        }.bind(this));
+
+        return mappedData.filter(this.inPage.bind(this))
+
     };
 
     TableModel.prototype.transformRow = function (row) {
 
-        var formatted = [];
-
-        this.columns.forEach(function (column) {
-            var formatter = column.formatter || TableModel.NO_FORMAT,
-                value = formatter(row[column.id], row);
-            value.className = column.className;
-            formatted.push(value);
+        var formatted = this.columns.map(function (column) {
+            var formatter = column.formatter || TableModel.NO_FORMAT;
+            return formatter(row[column.id], row);
         });
 
         formatted.id = row.id;
@@ -182,6 +220,40 @@ window.js = window.js || {};
     TableModel.NO_FORMAT = function (val) {
         return val;
     };
+
+    TableModel.ASCENDING = {
+        id: "ascending",
+        sorter:function (fieldId) {
+            return function (a, b) {
+                return compare(a, b, fieldId);
+            }
+        },
+        opposite:function () {
+            return TableModel.DESCENDING;
+        }
+    };
+
+    TableModel.DESCENDING = {
+        id: "descending",
+        sorter:function (index) {
+            return function (a, b) {
+                return -1 * compare(a, b, index);
+            }
+        },
+        opposite:function () {
+            return TableModel.ASCENDING;
+        }
+    };
+
+    function compare(a, b, index) {
+        if (a[index] < b[index]) {
+            return -1;
+        }
+        if (a[index] > b[index]) {
+            return 1;
+        }
+        return 0;
+    }
 
     js.TableModel = TableModel;
 
