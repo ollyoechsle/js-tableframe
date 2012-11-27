@@ -214,7 +214,7 @@ window.js = window.js || {};
 
         var formatted = this.columns.map(function (column) {
             var formatter = column.formatter || TableModel.NO_FORMAT;
-            return formatter(row[column.id], row);
+            return formatter(row[column.id], row, column);
         });
 
         formatted.id = row.id;
