@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         },
         concat:{
             dist:{
-                src:['<banner:meta.banner>', 'src/*.js'],
+                src:['<banner:meta.banner>', 'src/namespace.js', 'src/*.js'],
                 dest:'js-tableframe-<%= meta.version %>.js'
             }
         },

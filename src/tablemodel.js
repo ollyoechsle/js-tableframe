@@ -14,8 +14,18 @@
     TableModel.prototype.sortField = null;
     TableModel.prototype.sortDirection = null;
 
+    TableModel.prototype.createColumnInstance = function(columnJson) {
+        return new js.Column(
+            this,
+            columnJson.id,
+            columnJson.name,
+            columnJson.data,
+            columnJson.valueFn,
+            columnJson.formatFn)
+    };
+
     TableModel.prototype.setAllData = function (options) {
-        this.columns = options.columns || [];
+        this.columns = (options.columns || []).map(this.createColumnInstance.bind(this));
         this.allData = options.data || [];
         this.pageSize = options.pageSize || 10;
         this.pageNumber = options.pageNumber || 0;
@@ -30,16 +40,16 @@
     TableModel.prototype.setSorting = function (field, direction) {
         console.log("setSorting", arguments);
         this.sortDirection =
-        direction || field == this.sortField ? this.sortDirection.opposite()
+        direction || field == this.sortField ? this.sortDirection.toggle()
             : TableModel.ASCENDING;
         this.sortField = field;
         this.fire("allDataChanged");
         return this;
     };
 
-    TableModel.prototype.setFormatter = function (columnId, formatterFn) {
+    TableModel.prototype.setFormatter = function (columnId, formatFn) {
         var column = this.getColumn(columnId);
-        column && (column.formatter = formatterFn);
+        column && (column.formatFn = formatFn);
         return this;
     };
 
@@ -56,44 +66,44 @@
 
     TableModel.prototype.getVisibleRows = function () {
 
-        var mappedData = this.allData.map(this.transformRow.bind(this));
-
-        this.columns.forEach(function (column, index) {
-            if (column.id == this.sortField) {
-                mappedData = mappedData.sort(this.sortDirection.sorter(index));
-
-                var max = 0;
-                mappedData.forEach(function getValue(data) {
-                    var a = data[index];
-                    if (!isNaN(a) && a > max) {
-                        max = a;
-                    }
-                });
-
-                column.sort = {
-                    direction:this.sortDirection.id,
-                    max:max
-                }
-            } else {
-                column.sort = null;
-            }
-        }.bind(this));
-
-        return mappedData.filter(this.inPage.bind(this))
-
-    };
-
-    TableModel.prototype.transformRow = function (row) {
-
-        var formatted = this.columns.map(function (column) {
-            var formatter = column.formatter || TableModel.NO_FORMAT;
-            return formatter(row[column.id], row, column);
-        });
-
-        formatted.id = row.id;
+        var values = this.allData.map(this.transformToValues.bind(this));
+        var sorted = this.sort(values);
+        var paged = sorted.filter(this.inPage.bind(this));
+        var formatted = paged.map(this.transformToFormatted.bind(this));
 
         return formatted;
 
+    };
+
+    TableModel.prototype.sort = function(mappedData) {
+        for (var i = 0, l = this.columns.length; i < l; i++) {
+            var column = this.columns[i];
+            if (column.isSorted()) {
+                return mappedData.sort(this.sortDirection.sorter(i));
+            }
+        }
+        return mappedData;
+    };
+
+    TableModel.prototype.transformToValues = function (row) {
+
+        var values = this.columns.map(function (column, index) {
+            return column.valueFn(row[column.id], row, column);
+        });
+
+        // TODO: I don't like this
+        values.id = row.id;
+
+        return values;
+
+    };
+
+    TableModel.prototype.transformToFormatted = function (row) {
+        var formatted = this.columns.map(function (column, index) {
+            return column.formatFn(row[index], row, column);
+        });
+        formatted.id = row.id;
+        return formatted;
     };
 
     TableModel.prototype.inPage = function (value, index, array) {
@@ -112,7 +122,7 @@
                 return compare(a, b, fieldId);
             }
         },
-        opposite:function () {
+        toggle:function () {
             return TableModel.DESCENDING;
         }
     };
@@ -124,7 +134,7 @@
                 return -1 * compare(a, b, index);
             }
         },
-        opposite:function () {
+        toggle:function () {
             return TableModel.ASCENDING;
         }
     };

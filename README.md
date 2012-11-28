@@ -1,7 +1,7 @@
 JS TableFrame
 =============
 
-A tiny (1 KB), event-based table framework for JavaScript apps.
+A tiny (1 KB), object orientated, event-based table framework for JavaScript apps.
 
 Example:
 
@@ -26,7 +26,7 @@ jQuery(function () {
                 {
                     id:"age",
                     name:"Age",
-                    formatter:function (age, person) {
+                    valueFn:function (age, person) {
                         return person.died - person.born;
                     }
                 }

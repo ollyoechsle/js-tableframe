@@ -194,30 +194,30 @@
                 {
                     id:"id",
                     name:"Identifier",
-                    className:"number"
+                    data:{className:"number"}
                 },
                 {
                     id:"name",
                     name:function () {
                         return "Name";
                     },
-                    className:"string"
+                    data:{className:"string"}
                 },
                 {
                     id:"born",
                     name:"Born",
-                    className:"number"
+                    data:{className:"number"}
                 },
                 {
                     id:"died",
                     name:"Died",
-                    className:"number"
+                    data:{className:"number"}
                 },
                 {
                     id:"age",
                     name:"Age",
-                    className:"number",
-                    formatter:function (age, person) {
+                    data:{className:"number"},
+                    valueFn:function (age, person) {
                         return person.died - person.born;
                     }
                 }

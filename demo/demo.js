@@ -18,7 +18,7 @@ jQuery(function () {
                 {
                     id:"age",
                     name:"Age",
-                    formatter:function (age, person) {
+                    valueFn:function (age, person) {
                         return person.died - person.born;
                     }
                 }

@@ -32,7 +32,7 @@
             column, jTh,
             i, l;
 
-        for (i = 0, l = columns.length; i < l; i++) {
+        for (i = 0,l = columns.length; i < l; i++) {
             column = columns[i];
 
             jTh = jQuery("<th></th>")
@@ -40,9 +40,8 @@
                 .html(column.name)
                 .appendTo(jHeaderRow);
 
-            if (column.sort) {
-                jTh.attr("data-sort", column.sort.direction);
-                jTh.attr("data-max", column.sort.max);
+            if (column.isSorted()) {
+                jTh.attr("data-sort", this.model.sortDirection.id);
             }
 
             this.renderCell(
@@ -50,10 +49,10 @@
                 column,
                 i,
                 this.model
-            )
+                )
         }
 
-        for (i = 0, l = rows.length; i < l; i++) {
+        for (i = 0,l = rows.length; i < l; i++) {
             jTbody.append(this.renderDataRow(rows[i], columns))
         }
 
@@ -97,7 +96,7 @@
                 i,
                 this.model,
                 row
-            );
+                );
 
         }
 
@@ -112,7 +111,9 @@
     };
 
     Table.ADD_COLUMN_CLASS = function (jCell, column, index, model, row) {
-        jCell.addClass(column.className);
+        if (column.data && column.data.className) {
+            jCell.addClass(column.data.className);
+        }
     };
 
     Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
