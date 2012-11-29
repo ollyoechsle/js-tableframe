@@ -38,7 +38,6 @@
     };
 
     TableModel.prototype.setSorting = function (field, direction) {
-        console.log("setSorting", arguments);
         this.sortDirection =
         direction || field == this.sortField ? this.sortDirection.toggle()
             : TableModel.ASCENDING;
@@ -87,8 +86,8 @@
 
     TableModel.prototype.transformToValues = function (row) {
 
-        var values = this.columns.map(function (column, index) {
-            return column.valueFn(row[column.id], row, column);
+        var values = this.columns.map(function (column) {
+            return column.valueFn(row);
         });
 
         // TODO: I don't like this
@@ -140,12 +139,18 @@
     };
 
     function compare(a, b, index) {
-        if (a[index] < b[index]) {
+        var av = a[index], bv = b[index];
+        if (!isNaN(av) && !isNaN(bv)) {
+            av = +av;
+            bv = +bv;
+        }
+        if (av < bv) {
             return -1;
         }
-        if (a[index] > b[index]) {
+        if (av > bv) {
             return 1;
         }
+
         return 0;
     }
 

@@ -217,7 +217,7 @@
                     id:"age",
                     name:"Age",
                     data:{className:"number"},
-                    valueFn:function (age, person) {
+                    valueFn:function (person) {
                         return person.died - person.born;
                     }
                 }

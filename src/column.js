@@ -16,7 +16,7 @@
     Column.prototype.formatFn = null;
 
     Column.prototype.getAllData = function () {
-        return this.model.allData.map(this.valueFn);
+        return this.model.allData.map(this.valueFn.bind(this));
     };
 
     Column.prototype.getMax = function () {
@@ -27,8 +27,8 @@
         return this.model.sortField == this.id;
     };
 
-    Column.DEFAULT_VALUE_FN = function (originalValue, row, column) {
-        return originalValue;
+    Column.DEFAULT_VALUE_FN = function (row) {
+        return row[this.id];
     };
 
     Column.DEFAULT_FORMAT_FN = function (value) {

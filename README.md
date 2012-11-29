@@ -1,7 +1,7 @@
 JS TableFrame
 =============
 
-A tiny (1 KB), object orientated, event-based table framework for JavaScript apps.
+A tiny (1.5 KB), object orientated, event-based table framework for JavaScript apps.
 
 Example:
 
@@ -26,7 +26,7 @@ jQuery(function () {
                 {
                     id:"age",
                     name:"Age",
-                    valueFn:function (age, person) {
+                    valueFn:function (person) {
                         return person.died - person.born;
                     }
                 }
@@ -42,12 +42,42 @@ jQuery(function () {
 });
 ```
 
-Column  Formatters
+Formatters
 ----------
 
-You can pass a formatter function into each column to format the column.
+You can transform the values you pass in in two ways: with value functions and formatting functions.
 
-formatter is invoked with three arguments: the value of the element, the complete row of data, and the column instance
+Formatting functions allow you to transform the value in a cell to make it appear better. For instance
+you could add the following formatter to a numeric column to make it into a currency:
+
+```
+{
+    id:"cost",
+    name:"Cost",
+    formatFn:function (originalValue, rowArray, columnInstance) {
+        return originalValue.toFixed(2) + "GBP";
+    }
+}
+```
+
+The format function is invoked with three arguments: the value of the element, the complete row of data (as an array, not the original map), and a column instance.
+
+The column instance has helpful methods which you can use:
+* isSorted - Is this column currently the sort column
+* getMax - The maximum value in the column (numeric data only)
+
+You can also use value formatters to create `virtual` columns out from the underlying data:
+
+```
+{
+   id:"age",
+   name:"Age",
+   valueFn:function (person) {
+       return person.died - person.born;
+   }
+
+}
+```
 
 Events
 ------
