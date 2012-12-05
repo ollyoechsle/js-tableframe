@@ -169,7 +169,6 @@ window.js = window.js || {};
 (function () {
 
     function TableModel(options) {
-        this.sortDirection = TableModel.ASCENDING;
         this.setAllData(options || {});
     }
 
@@ -197,6 +196,8 @@ window.js = window.js || {};
         this.allData = options.data || [];
         this.pageSize = options.pageSize || 10;
         this.pageNumber = options.pageNumber || 0;
+        this.sortDirection = options.sortDirection || TableModel.ASCENDING;
+        this.sortField = options.sortField || null;
         this.fire("allDataChanged");
     };
 

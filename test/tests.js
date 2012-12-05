@@ -172,6 +172,27 @@
 
     });
 
+    test("Sorting in Config", function () {
+
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+
+        var data = famousPeople();
+        data.sortDirection = js.TableModel.ASCENDING;
+        data.sortField = "age";
+
+        when(model.setAllData(data));
+
+        thenThe(jQuery(".tableContainer tbody tr"))
+            .should(haveText("51",
+                             "52",
+                             "56",
+                             "76"), inElement("td:nth-child(5)"));
+
+        thenThe(jQuery(".tableContainer thead [data-column='age']"))
+            .should(haveAttribute("data-sort", "ascending"))
+
+    });
+
     test("Get Column", function () {
 
         var model = new js.TableModel(
