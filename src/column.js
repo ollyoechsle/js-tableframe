@@ -23,6 +23,10 @@
         return Math.max.apply(null, this.getAllData());
     };
 
+    Column.prototype.getMin = function () {
+        return Math.min.apply(null, this.getAllData());
+    };
+
     Column.prototype.isSorted = function () {
         return this.model.sortField == this.id;
     };
