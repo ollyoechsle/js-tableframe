@@ -2,7 +2,7 @@
 
     module("JS Table Frame", {
         setup: function () {
-            jQuery("body").append("<div class='tableContainer'></div>");
+            jQuery("body").append("<div class='tableContainer'></div><div class='pageControlsContainer'></div>");
         },
         teardown: function () {
             jQuery(".tableContainer").remove();
@@ -88,18 +88,29 @@
 
     test("Paging", function () {
 
-        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+        given(
+            model = new js.TableModel(),
+            table = new js.Table(".tableContainer", model),
+            pageControls = new js.TablePageControls(".pageControlsContainer", model)
+        );
 
         when(model.setAllData(jQuery.extend(famousPeople(), {
             pageSize: 2,
             pageNumber: 0
         })));
 
+        console.log("HTML of page controls:");
+        console.log(jQuery(".pageControlsContainer").html());
+
         thenThe(jQuery(".tableContainer table tbody"))
             .should(haveSize(2), inElement("tr"))
             .should(haveText(1, 2), inElement("td:first-child"));
 
-        when(model.setPage(1));
+        thenThe(jQuery(".pageControlsContainer ul"))
+            .should(haveText("1", "2"), inElement("li"))
+            .should(haveClass("current", ""), inElement("li"));
+
+        when(theUserClicksOn("[data-page-number='1']"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(haveSize(2), inElement("tr"))

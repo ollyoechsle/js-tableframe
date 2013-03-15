@@ -38,6 +38,10 @@
         this.fire("allDataChanged");
     };
 
+    TableModel.prototype.getPageCount = function() {
+      return this.allData.length / this.pageSize;
+    };
+
     TableModel.prototype.setSorting = function (field, direction) {
         this.sortDirection =
         direction || field == this.sortField ? this.sortDirection.toggle()
