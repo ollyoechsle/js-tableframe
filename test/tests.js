@@ -16,8 +16,8 @@
 
         when(model.setAllData(famousPeople()));
 
-        thenThe(jQuery(".tableContainer table")
-            .should(haveClass("tf")));
+        thenThe(jQuery(".tableContainer table"))
+            .should(haveClass("tf"));
 
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
@@ -140,7 +140,7 @@
         when(model.setAllData(fruits()));
 
         thenThe(jQuery(".tableContainer tbody"))
-            .should(haveClass("selected", "", "", ""), inElement("tr td:nth-child(1)"));
+            .should(haveClass("selected"), inElement("tr[data-id='Apple']"));
 
     });
 
