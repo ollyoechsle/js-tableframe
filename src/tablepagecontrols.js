@@ -12,7 +12,7 @@
 
     TablePageControls.prototype.initialise = function () {
         this.model.on("allDataChanged", this.draw, this);
-        this.jContainer.delegate("[data-page-number]", "click.TablePageControls", this.handlePageClicked.bind(this));
+        this.jContainer.delegate("[data-page-number].active", "click.TablePageControls", this.handlePageClicked.bind(this));
     };
 
     TablePageControls.prototype.draw = function () {
@@ -27,7 +27,7 @@
 
                 jQuery("<li></li>")
                     .text(pageNumber + 1)
-                    .toggleClass("current", currentPageNumber == pageNumber)
+                    .toggleClass("active", currentPageNumber != pageNumber)
                     .attr("data-page-number", pageNumber)
                     .appendTo(jPageList)
 
@@ -48,8 +48,6 @@
         this.model.un(null, this);
         this.jContainer.undelegate(".TablePageControls");
     };
-
-    TablePageControls.TablePageControls = '<ul class="tf TablePageControls"></ul>';
 
     js.TablePageControls = TablePageControls;
 

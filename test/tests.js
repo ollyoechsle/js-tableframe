@@ -99,22 +99,23 @@
             pageNumber: 0
         })));
 
-        console.log("HTML of page controls:");
-        console.log(jQuery(".pageControlsContainer").html());
-
         thenThe(jQuery(".tableContainer table tbody"))
             .should(haveSize(2), inElement("tr"))
             .should(haveText(1, 2), inElement("td:first-child"));
 
         thenThe(jQuery(".pageControlsContainer ul"))
             .should(haveText("1", "2"), inElement("li"))
-            .should(haveClass("current", ""), inElement("li"));
+            .should(haveClass("", "active"), inElement("li"));
 
         when(theUserClicksOn("[data-page-number='1']"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(haveSize(2), inElement("tr"))
             .should(haveText(3, 4), inElement("td:first-child"));
+
+        thenThe(jQuery(".pageControlsContainer ul"))
+            .should(haveText("1", "2"), inElement("li"))
+            .should(haveClass("active", ""), inElement("li"));
 
     });
 
