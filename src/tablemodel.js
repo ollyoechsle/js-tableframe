@@ -145,6 +145,12 @@
             av = +av;
             bv = +bv;
         }
+        if (typeof av === "string") {
+            av = av.toLowerCase();
+        }
+        if (typeof bv === "string") {
+            bv = bv.toLowerCase();
+        }
         if (av < bv) {
             return -1;
         }
