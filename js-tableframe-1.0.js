@@ -28,6 +28,10 @@ window.js = window.js || {};
         return Math.max.apply(null, this.getAllData());
     };
 
+    Column.prototype.getMin = function () {
+        return Math.min.apply(null, this.getAllData());
+    };
+
     Column.prototype.isSorted = function () {
         return this.model.sortField == this.id;
     };
@@ -49,6 +53,7 @@ window.js = window.js || {};
         this.jContainer = jQuery(container);
         this.model = model;
         this.cellRenderers = [Table.ADD_COLUMN_CLASS];
+        this.rowRenderers = [];
         this.initialise();
     }
 
@@ -56,9 +61,15 @@ window.js = window.js || {};
 
     Table.prototype.jContainer = null;
     Table.prototype.cellRenderers = null;
+    Table.prototype.rowRenderers = null;
 
     Table.prototype.withCellRenderer = function (rendererFn) {
         this.cellRenderers.push(rendererFn);
+        return this;
+    };
+
+    Table.prototype.withRowRenderer = function (rendererFn) {
+        this.rowRenderers.push(rendererFn);
         return this;
     };
 
@@ -77,7 +88,7 @@ window.js = window.js || {};
             column, jTh,
             i, l;
 
-        for (i = 0,l = columns.length; i < l; i++) {
+        for (i = 0, l = columns.length; i < l; i++) {
             column = columns[i];
 
             jTh = jQuery("<th></th>")
@@ -94,10 +105,10 @@ window.js = window.js || {};
                 column,
                 i,
                 this.model
-                )
+            )
         }
 
-        for (i = 0,l = rows.length; i < l; i++) {
+        for (i = 0, l = rows.length; i < l; i++) {
             jTbody.append(this.renderDataRow(rows[i], columns))
         }
 
@@ -141,9 +152,13 @@ window.js = window.js || {};
                 i,
                 this.model,
                 row
-                );
+            );
 
         }
+
+        this.rowRenderers.forEach(function (fn) {
+            fn(jRow, row);
+        });
 
         return jRow;
 
@@ -161,7 +176,7 @@ window.js = window.js || {};
         }
     };
 
-    Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
+    Table.TABLE = '<table class="tf"><thead><tr></tr></tr></thead><tbody></tbody></table>';
 
     js.Table = Table;
 
@@ -312,6 +327,12 @@ window.js = window.js || {};
         if (!isNaN(av) && !isNaN(bv)) {
             av = +av;
             bv = +bv;
+        }
+        if (typeof av === "string") {
+            av = av.toLowerCase();
+        }
+        if (typeof bv === "string") {
+            bv = bv.toLowerCase();
         }
         if (av < bv) {
             return -1;

@@ -1,10 +1,10 @@
 (function () {
 
     module("JS Table Frame", {
-        setup:function () {
+        setup: function () {
             jQuery("body").append("<div class='tableContainer'></div>");
         },
-        teardown:function () {
+        teardown: function () {
             jQuery(".tableContainer").remove();
             model = null;
             table = null;
@@ -16,22 +16,24 @@
 
         when(model.setAllData(famousPeople()));
 
+        thenThe(jQuery(".tableContainer table")
+            .should(haveClass("tf")));
+
         thenThe(jQuery(".tableContainer table thead"))
             .should(beThere)
             .should(haveText("Identifier", "Name", "Born", "Died", "Age"), inElement("th"))
-            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"),
-                    inElement("th"));
+            .should(haveAttribute("data-column", "id", "name", "born", "died", "age"), inElement("th"));
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(beThere)
             .should(haveText("1", "Michael Jackson", 1958, 2009, 51),
-                    inElement("tr:nth-child(1) td"))
+                inElement("tr:nth-child(1) td"))
             .should(haveText("2", "Albert Einstein", 1879, 1955, 76),
-                    inElement("tr:nth-child(2) td"))
+                inElement("tr:nth-child(2) td"))
             .should(haveText("3", "Abraham Lincoln", 1809, 1865, 56),
-                    inElement("tr:nth-child(3) td"))
+                inElement("tr:nth-child(3) td"))
             .should(haveText("4", "William Shakespeare", 1564, 1616, 52),
-                    inElement("tr:nth-child(4) td"));
+                inElement("tr:nth-child(4) td"));
 
     });
 
@@ -45,9 +47,9 @@
 
         thenThe(jQuery(".tableContainer table tbody"))
             .should(haveClass("number", "string", "number", "number", "number"),
-                    inElement("tr:nth-child(1) td"))
+                inElement("tr:nth-child(1) td"))
             .should(haveClass("number", "string", "number", "number", "number"),
-                    inElement("tr:nth-child(2) td"));
+                inElement("tr:nth-child(2) td"));
 
     });
 
@@ -89,8 +91,8 @@
         given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
 
         when(model.setAllData(jQuery.extend(famousPeople(), {
-            pageSize:2,
-            pageNumber:0
+            pageSize: 2,
+            pageNumber: 0
         })));
 
         thenThe(jQuery(".tableContainer table tbody"))
@@ -129,6 +131,19 @@
 
     });
 
+    test("Row Renderer", function () {
+        given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
+        given(table.withRowRenderer(function (jRow, rowData) {
+            jRow.toggleClass("selected", rowData.id == "Apple")
+        }));
+
+        when(model.setAllData(fruits()));
+
+        thenThe(jQuery(".tableContainer tbody"))
+            .should(haveClass("selected", "", "", ""), inElement("tr td:nth-child(1)"));
+
+    });
+
     test("Formatting", function () {
 
         given(model = new js.TableModel(), table = new js.Table(".tableContainer", model));
@@ -147,7 +162,7 @@
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Apple", "Banana", "Orange", "Red Grape"), inElement("td:first-child"))
             .should(haveAttribute("data-colour", "green", "yellow", "orange", "purple"),
-                    inElement(".icon"));
+                inElement(".icon"));
 
     });
 
@@ -159,13 +174,13 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Michael Jackson", "Albert Einstein", "Abraham Lincoln",
-                             "William Shakespeare"), inElement("td:nth-child(2)"));
+                "William Shakespeare"), inElement("td:nth-child(2)"));
 
         when(theUserClicksOn(".tableContainer thead [data-column='name']"));
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("Abraham Lincoln", "Albert Einstein", "Michael Jackson",
-                             "William Shakespeare"), inElement("td:nth-child(2)"));
+                "William Shakespeare"), inElement("td:nth-child(2)"));
 
         thenThe(jQuery(".tableContainer thead [data-column='name']"))
             .should(haveAttribute("data-sort", "ascending"))
@@ -184,9 +199,9 @@
 
         thenThe(jQuery(".tableContainer tbody tr"))
             .should(haveText("51",
-                             "52",
-                             "56",
-                             "76"), inElement("td:nth-child(5)"));
+                "52",
+                "56",
+                "76"), inElement("td:nth-child(5)"));
 
         thenThe(jQuery(".tableContainer thead [data-column='age']"))
             .should(haveAttribute("data-sort", "ascending"))
@@ -211,64 +226,64 @@
 
     function famousPeople() {
         return {
-            columns:[
+            columns: [
                 {
-                    id:"id",
-                    name:"Identifier",
-                    data:{className:"number"}
+                    id: "id",
+                    name: "Identifier",
+                    data: {className: "number"}
                 },
                 {
-                    id:"name",
-                    name:function () {
+                    id: "name",
+                    name: function () {
                         return "Name";
                     },
-                    data:{className:"string"}
+                    data: {className: "string"}
                 },
                 {
-                    id:"born",
-                    name:"Born",
-                    data:{className:"number"}
+                    id: "born",
+                    name: "Born",
+                    data: {className: "number"}
                 },
                 {
-                    id:"died",
-                    name:"Died",
-                    data:{className:"number"}
+                    id: "died",
+                    name: "Died",
+                    data: {className: "number"}
                 },
                 {
-                    id:"age",
-                    name:"Age",
-                    data:{className:"number"},
-                    valueFn:function (person) {
+                    id: "age",
+                    name: "Age",
+                    data: {className: "number"},
+                    valueFn: function (person) {
                         return person.died - person.born;
                     }
                 }
             ],
-            data:[
-                {"id":"1", "name":"Michael Jackson", "born":1958, "died":2009},
-                {"id":"2", "name":"Albert Einstein", "born":1879, "died":1955},
-                {"id":"3", "name":"Abraham Lincoln", "born":1809, "died":1865},
-                {"id":"4", "name":"William Shakespeare", "born":1564, "died":1616}
+            data: [
+                {"id": "1", "name": "Michael Jackson", "born": 1958, "died": 2009},
+                {"id": "2", "name": "Albert Einstein", "born": 1879, "died": 1955},
+                {"id": "3", "name": "Abraham Lincoln", "born": 1809, "died": 1865},
+                {"id": "4", "name": "William Shakespeare", "born": 1564, "died": 1616}
             ]
         }
     }
 
     function fruits() {
         return {
-            columns:[
+            columns: [
                 {
-                    id:"id",
-                    name:"Fruit"
+                    id: "id",
+                    name: "Fruit"
                 },
                 {
-                    id:"colour",
-                    name:"Colour"
+                    id: "colour",
+                    name: "Colour"
                 }
             ],
-            data:[
-                {"id":"Apple", colour:"green"},
-                {"id":"Banana", colour:"yellow"},
-                {"id":"Orange", colour:"orange"},
-                {"id":"Red Grape", colour:"purple"}
+            data: [
+                {"id": "Apple", colour: "green"},
+                {"id": "Banana", colour: "yellow"},
+                {"id": "Orange", colour: "orange"},
+                {"id": "Red Grape", colour: "purple"}
             ]
         }
     }

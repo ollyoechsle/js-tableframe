@@ -4,6 +4,7 @@
         this.jContainer = jQuery(container);
         this.model = model;
         this.cellRenderers = [Table.ADD_COLUMN_CLASS];
+        this.rowRenderers = [];
         this.initialise();
     }
 
@@ -11,9 +12,15 @@
 
     Table.prototype.jContainer = null;
     Table.prototype.cellRenderers = null;
+    Table.prototype.rowRenderers = null;
 
     Table.prototype.withCellRenderer = function (rendererFn) {
         this.cellRenderers.push(rendererFn);
+        return this;
+    };
+
+    Table.prototype.withRowRenderer = function (rendererFn) {
+        this.rowRenderers.push(rendererFn);
         return this;
     };
 
@@ -32,7 +39,7 @@
             column, jTh,
             i, l;
 
-        for (i = 0,l = columns.length; i < l; i++) {
+        for (i = 0, l = columns.length; i < l; i++) {
             column = columns[i];
 
             jTh = jQuery("<th></th>")
@@ -49,10 +56,10 @@
                 column,
                 i,
                 this.model
-                )
+            )
         }
 
-        for (i = 0,l = rows.length; i < l; i++) {
+        for (i = 0, l = rows.length; i < l; i++) {
             jTbody.append(this.renderDataRow(rows[i], columns))
         }
 
@@ -96,9 +103,13 @@
                 i,
                 this.model,
                 row
-                );
+            );
 
         }
+
+        this.rowRenderers.forEach(function (fn) {
+            fn(jRow, row);
+        });
 
         return jRow;
 
@@ -116,7 +127,7 @@
         }
     };
 
-    Table.TABLE = '<table><thead><tr></tr></tr></thead><tbody></tbody></table>';
+    Table.TABLE = '<table class="tf"><thead><tr></tr></tr></thead><tbody></tbody></table>';
 
     js.Table = Table;
 
