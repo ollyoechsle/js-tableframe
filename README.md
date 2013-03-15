@@ -86,6 +86,15 @@ The table will fire the following events:
 * rowClicked - the callback will be provided with the id of the row (ensure each row object has an 'id' property)
 * columnClicked - the callback will be provided with the id of the column (ensure each column object has an 'id' property)
 
+Page Controls
+-------------
+
+You can also add a page controls widget to navigate through pages of data.
+
+```
+pageControls = new js.Table(".pageControlsContainer", model)
+```
+
 Dependencies
 ------------
 
